@@ -1,0 +1,328 @@
+Question 1 
+
+Task:
+Create a Table Board and inspect the trip data.
+
+While inspecting the data, identify important columns such as pickup time, drop-off time, passenger count, trip distance, pickup location, drop-off location, fare amount, tip amount, payment type, and total amount.
+
+Business question:
+“What information is available in each taxi trip record?”
+
+
+Question 2 — Get a quick summary of taxi activity
+
+The team wants some basic statistics before performing deeper analysis.
+
+Task:
+Create a Calculation Board and calculate:
+
+Total number of trips
+Number of unique pickup locations
+Average trip distance
+Average fare amount
+
+Business question:
+“How much taxi activity is present in the dataset, and what does a typical trip look like?”
+
+The original lab similarly uses Calculation boards for quick aggregate measures.
+
+
+Question 3 — Simplify the dataset
+
+Some column names are technical and some fields are not required for this analysis.
+
+Task:
+Use Edit Columns → Multi-Column Editor.
+
+Rename:
+
+PULocationID → pickup_location_id
+DOLocationID → dropoff_location_id
+tpep_pickup_datetime → pickup_datetime
+tpep_dropoff_datetime → dropoff_datetime
+
+Remove any unnecessary columns that you do not plan to use in the remaining analysis.
+
+Business question:
+“Can we make the dataset easier for analysts and business users to understand?”
+
+This mirrors the rename/drop-column activity in the lab guide.
+
+
+Question 4 — Make coded values understandable
+
+The payment_type column contains coded values rather than business-friendly descriptions.
+
+Task:
+Convert payment_type to String if required, then use Find and Replace to make the values readable.
+
+For example:
+
+1 → Credit card
+2 → Cash
+3 → No charge
+4 → Dispute
+
+Business question:
+“Can we replace technical codes with values that business users can easily understand?”
+
+The lab guide also demonstrates Convert Types followed by Find and Replace transformations.
+
+
+Question 5 — Keep only valid February trips
+
+The team wants to focus specifically on February 2019.
+
+Task:
+Create a Filter Board.
+
+Keep records where:
+
+pickup_datetime is on or after 01-Feb-2019
+
+and optionally:
+
+pickup_datetime is before 01-Mar-2019
+
+You can also add:
+
+trip_distance > 0
+
+to remove zero-distance trips if desired.
+
+Business question:
+“Can we restrict our analysis to valid February 2019 taxi trips?”
+
+The original lab uses a date-based Filter board before continuing downstream analysis.
+
+
+Question 6 — Add real pickup-location information
+
+At the moment, pickup_location_id is only a numeric identifier. Business users want to know the actual Borough and Zone.
+
+Task:
+Create a new Path based on your cleaned taxi data.
+
+Then:
+
+Join → Join
+
+Join with the TaxiZones dataset.
+
+Use the matching condition:
+
+pickup_location_id = LocationID
+
+Add:
+
+Borough
+Zone
+service_zone
+
+Business question:
+“Where are these taxi trips actually starting?”
+
+The source lab uses the same approach of creating a new path and then joining a second dataset using a shared identifier.
+
+
+Question 7 — Calculate trip duration
+
+The raw dataset gives pickup and drop-off timestamps, but trip duration is not directly available.
+
+Task:
+Use an Expression Board to create:
+
+trip_duration_minutes
+
+using the difference between:
+
+dropoff_datetime and pickup_datetime
+
+Business question:
+“How long does each taxi trip take?”
+
+The exact date-difference syntax can depend on the Contour version, so use the Expression editor’s available date functions during the lab.
+
+The lab guide uses Expression boards to derive new calculated columns from existing data.
+
+
+Question 8 — Calculate tip percentage
+
+The team wants to compare tipping behavior fairly across trips of different fare amounts.
+
+Task:
+Create another Expression Board and derive:
+
+tip_percentage
+
+Conceptually:
+
+tip_amount / fare_amount * 100
+
+Handle zero fare amounts appropriately.
+
+Business question:
+“What percentage of the fare are passengers typically tipping?”
+
+
+Question 9 — Categorize trips by fare
+
+The management team wants a simple way to classify trips into spending categories.
+
+Task:
+Use an Expression Board with a CASE statement and create:
+
+fare_category
+
+For example:
+
+Total amount >= 50 → High
+Total amount >= 20 → Medium
+Otherwise → Low
+
+Business question:
+“Which taxi trips are low-value, medium-value, and high-value trips?”
+
+This is similar to the lab guide's CASE-expression exercise, where rows are classified into high, medium, and low categories.
+
+
+Question 10 — Let users choose a Borough dynamically
+
+The dashboard should not be fixed to one Borough.
+
+Task:
+Create a String Parameter called:
+
+Borough
+
+Allow multiple values and link the suggested values to the Borough column.
+
+Then create a Filter Board:
+
+Borough is $Borough
+
+Business question:
+“Can users interactively choose the Borough they want to analyze without changing the underlying analysis?”
+
+The provided lab demonstrates creating a String parameter and applying it inside a filter in the same way.
+
+
+Question 11 — Which Borough has the most pickup activity?
+
+Task:
+Create a Histogram or count-based visualization.
+
+Category:
+
+Borough
+
+Measure:
+
+Count
+
+Business question:
+“Which Borough generates the highest number of taxi pickups?”
+
+The lab guide similarly uses a Histogram to count categorical values.
+
+
+Question 12 — Which taxi zones have higher average fares?
+
+Task:
+Create a Pivot Table.
+
+Rows:
+
+Borough
+Zone
+
+Aggregate:
+
+Average of total_amount
+
+Optionally also add:
+
+Average of trip_distance
+
+Business question:
+“Which Boroughs and taxi zones have higher average trip values?”
+
+The original lab also uses a Pivot Table with multiple row dimensions and an aggregate measure.
+
+
+Question 13 — Does trip distance affect total amount?
+
+Task:
+Create a Scatter Plot.
+
+X-axis:
+
+trip_distance
+
+Y-axis:
+
+total_amount
+
+Business question:
+“Is there a relationship between how far a passenger travels and how much the trip costs?”
+
+The lab guide demonstrates the same Chart board using a scatter plot configuration.
+
+
+Question 14 — How does payment behavior vary?
+
+Task:
+Create a Vertical Bar Chart.
+
+A simple version:
+
+X-axis:
+
+payment_type
+
+Y-axis:
+
+Count
+
+Or a slightly richer version:
+
+X-axis:
+
+Borough
+
+Y-axis:
+
+Average of total_amount
+
+Segment by:
+
+payment_type
+
+Business question:
+“What payment methods are commonly used, and does payment behavior vary across Boroughs?”
+
+The original lab also demonstrates vertical bar charts and segmentation.
+
+
+Question 15 — Build an interactive management dashboard
+
+The transportation team now wants one consolidated view instead of looking at individual Boards.
+
+Task:
+Create a dashboard called:
+
+NYC Yellow Taxi Analysis Dashboard
+
+Add:
+
+Pickup Trips by Borough
+Average Fare by Borough and Zone
+Trip Distance vs Total Amount
+Payment Type Analysis
+
+Add the Borough parameter to the dashboard and demonstrate changing it from one Borough to another.
+
+Business question:
+“Can decision-makers explore taxi activity interactively from one dashboard?”
+
+The source lab ends the workflow by adding analysis boards to a dashboard and demonstrating interactive parameter-driven updates.
